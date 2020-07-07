@@ -1,0 +1,61 @@
+# Récupère le profil de l'image avec "imageinfo"
+volatility -f foo.mem imageinfo
+
+# Lister les processus
+volatility -f foo.mem --profile=foo pslist
+
+# Afficher l'arbre de processus 
+volatility -f foo.mem --profile=foo pstree
+
+# Afficher les processus cachés
+volatility -f foo.mem –-profile=foo psxview
+
+# Lister les dll utilisés par un processus
+volatility -f foo.mem --profile=foo dlllist -p 1234
+
+# Lister les ruches (hives) constituant la base de registre 
+volatility -f foo.mem --profile=foo hivelist
+
+# Récupération du hash des mots de passe des comptes Windows
+# L'option -y prend l'addresse virtuelle du hive SYSTEM
+# L'option -s prend l'adresse virtuelle du hive SAM
+volatility -f foo.mem --profile=foo hashdump -y 0x8981c008 -s 0x8a6579c8
+
+# Lister les connexions réseaux actives
+volatility -f foo.mem --profile=foo netscan
+
+# Détecter l'injection de code malveillant
+volatility -f foo.mem –-profile=foo malfind
+
+# Dumper un processus
+volatility -f foo.mem –-profile=foo procdump -p 1234 -D path/to/destination 
+
+# Dumper la mémoire d'un processus
+volatility -f foo.mem –-profile=foo memdump -p 1234 -D path/to/destination 
+
+# Lister les mutex
+# Les mutex peuvent être utilisés par un malware pour ne pas réinfecter une même machine
+volatility -f foo.mem –-profile=foo mutantscan 
+
+# Lister les services 
+# Les malwares peuvent utiliser les services Windows comme moyen de persistance afin de survivre au redémarrage 
+volatility -f foo.mem –-profile=foo svcscan
+
+# Afficher l'historique des commandes entrées dans l'invite de commande 
+volatility -f foo.mem –-profile=foo cmdscan
+
+# Utiliser des YARA rules
+volatility -f foo.mem –-profile=foo yarascan
+
+# Utiliser des plugins
+volatility --plugins="/path/to/plugin" -f foo.mem --profile=foo plugin_name
+
+# Utile pour l'analyse d'un fichier de type hiberfill.sys
+# Ce fichier contient l'état de la RAM afin de la recharger en mémoire après hibernation
+# Fichier impossible à lire lors du l'éxecution de la machine car ouvert en permanence
+volatility -f hiberfil.sys --profile=xxxxx imagecopy -O foo.dmp
+
+# Utile pour l'analyse d'un fichier de type pagefile.sys
+# Ce fichier contient les pages non chargées dans la RAM dans le cadre de la pagination
+# Fichier impossible à lire lors du l'éxecution de la machine car ouvert en permanence
+strings pagefile.sys | grep “http://”
