@@ -1,0 +1,147 @@
+---
+tags [ networking  ]
+---
+
+#########################################
+######### CONFIGURATION GLOBALE #########
+#########################################
+
+# Accéder au mode d'éxecution privilégié:
+enable 
+
+# Accéder au mode configuration globale:
+conf t
+
+# Désactiver la recherche DNS (pour les routeurs):
+no ip domain-lookup
+
+# Changer le hostname:
+hostname <hostname>
+
+# Configure le mdp à utiliser pour utiliser le mode privilégié:
+enable secret <mdp>
+
+# Chiffrement des mdp:
+service password-encryption
+
+# Configurer la passerelle par défaut:
+ip default-gateway <ip> <netmask>
+
+# Changer la bannière à afficher lors d'une connexion au switch/router:
+banner motd %<Message à afficher>%
+
+# Rendre la configuration persistante:
+copy running-config startup-config
+
+################################################
+######### CONFIGURATION DES INTERFACES #########
+################################################
+
+# Configurer une interface (vlan1 pour un switch):
+conf int <interface>
+
+# Configurer l'IP de l'interface:
+ip address <ip> <netmask>
+
+# Configurer le clock rate lors d'une connexion entre routeurs via cable série 
+# À exécuter seulement sur l'interface DCE:
+clock rate <clockrate>
+
+# Allumer l'interface:
+no sh
+
+# Quitter l'interface:
+exit
+
+###############################################
+######### CONFIGURER L'ACCÈS CONSOLE  #########
+###############################################
+
+# Activer console:
+line console 0
+
+# Définir un mdp:
+password <mdp>
+
+# Éviter que l'output des logs ne perturbe l'affichage:
+logging synchronous
+
+# Activer l'authentification via mdp:
+login
+
+###########################################
+######### CONFIGURER L'ACCÈS VTY  #########
+###########################################
+
+# Activer les 5 premiers terminaux virtuels:
+line vty 0 4
+
+# Définir un mdp:
+password <mdp>
+
+# Activer le support ssh des vtys:
+transport input ssh
+
+# Activer l'authentification via username et mdp:
+login local
+
+# Éviter que l'output des logs ne perturbe l'affichage:
+logging synchronous
+
+###################################
+######### CONFIGURER SSH  #########
+###################################
+
+# Configurer le nom de domaine:
+ip domain-name <nomDeDomaine>
+
+# Configurer un nom d'utilisateur et un mdp:
+username <username> privilege 1 secret <mdp>
+
+# Générer la clé rsa:
+crypto key generate rsa general-keys modulus 1024
+
+######################################
+######### CONFIGURER RIP V2  #########
+######################################
+
+######### Sur chaque routeur #########
+
+# Activer le protocole RIP:
+router rip
+
+# Configuration de RIP en V2:
+version 2
+
+# Définir les réseaux directement connectés au routeur 
+# À l'exception du réseau directement connecté à internet:
+network <networkIp>
+
+# Désactiver les interfaces qui ne sont pas en face d'un autre routeur:
+passive-interface <interface>
+
+# Désactiver le résumé RIP par mesure de sécurité:
+no auto-summary
+
+# Rendre la configuration persistante:
+copy running-config startup-config
+
+######### Sur le routeur offrant un accès à internet #########
+
+# Créer une route par défaut vers l'extérieur:
+ip route 0.0.0.0 0.0.0.0 <interfaceDeSortie>
+
+# Activer le protocole RIP:
+router rip
+
+# Propager la route par défaut aux autres routeurs:
+default-information originate
+
+# Rendre la configuration persistante:
+copy running-config startup-config
+
+# Afficher l'état de la table de routage:
+show ip route
+
+# Afficher les informations sur les routes actives et apprisent par RIP:
+show ip rip database
