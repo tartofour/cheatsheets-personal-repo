@@ -1,12 +1,13 @@
-# Parcourt /var/log/syslog et affiche le détail des clés usb non-authorisées ayant étés insérées sur le système. Cible les clés USB indésirables en comparant leur numéro de série avec ceux figurants dans le fichier "auth.json"
+# Parcourt /var/log/syslog et affiche le détail des clés usb non-authorisées ayant étés insérées sur le système
+# Cible les clés USB indésirables en comparant leur numéro de série avec ceux figurants dans le fichier "auth.json":
 usbrip events violations auth.json
 
-# Avec un fichier syslog externe
+# Avec un fichier syslog externe:
 usbrip events violations auth.json --file syslog_file
 
-# Recherche les références de la clés USB dans la base de donnée USB ID via le VendorID et/ou le ProductID
+# Recherche les références de la clés USB dans la base de donnée USB ID via le VendorID et/ou le ProductID:
 usbrip ids search --vid 1234 --pid 4321 
 
-# Met à jour la base de données USB ID 
+# Met à jour la base de données USB ID: 
 usbrip ids download
 

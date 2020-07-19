@@ -1,0 +1,7 @@
+# Liste les commandes autorisées et refusées à l'utilisateur:
+sudo -l
+
+# Lancer une commande en tant qu'un autre utilisteur:
+sudo -u <username>
+
+
