@@ -1,0 +1,4 @@
+# Supprimer toutes les métadonnées EXIF
+exiftool -all= <image.foo>
+
+

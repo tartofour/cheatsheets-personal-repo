@@ -26,6 +26,7 @@ nmap -O --osscan_guess [target]
 nmap -oN [output.txt] [target]
 
 # Save output to xml file:
+# Usefull to work with nmap
 nmap -oX [output.xml] [target]
 
 # Scan a specific port:

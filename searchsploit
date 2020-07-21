@@ -1,0 +1,19 @@
+# Rechercher via le titre:
+searchsploit -t <terme1> <termeN>
+
+# Copier dans le path de l'exploit dans le presse-papier:
+searchsploit -p <exploit>
+
+# Copier l'exploit dans le répertoire courant:
+searchsploit -m <exploit>
+
+# Examiner les fichiers textes de l'exploit
+searchsploit <exploit> --examine
+
+# Effectuer une recherche sur un fichier XML Nmap:
+searchsploit -x --nmap /path/to/foo.xml
+
+# Effectuer une recherche via internet:
+searchsploit <exploit> -w
+
+
