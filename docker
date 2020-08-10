@@ -13,15 +13,15 @@ docker pull <image>
 # Élevation de privilège à condition que l'utilisateur courant fasse partie du group docker ou root:
 docker run -v /:/mnt --rm -it alpine chroot /mnt sh
 
-    - v : volume, permet de monter un repertoire local dans le container
-    - i : interactive
-    - t : tty
+    -v : volume, permet de monter un repertoire local dans le container
+    -i : interactive
+    -t : tty
 
 # Lancer un container et binder un port local avec le port exposé du container:
 docker run -d -p <local_port>:<container_port> <image> 
 
-    - d : detach, permet de faire tourner le container en arrière plan 
-    - p : publish, permet un bind des ports
+    -d : detach, permet de faire tourner le container en arrière plan 
+    -p : publish, permet un bind des ports
 
 # To start a container with an interactive shell:
 docker run -ti <image-name> /bin/bash
