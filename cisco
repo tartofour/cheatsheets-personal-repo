@@ -25,7 +25,7 @@ enable secret <mdp>
 service password-encryption
 
 # Configurer la passerelle par défaut:
-ip default-gateway <ip> <netmask>
+ip default-gateway <ip> 
 
 # Changer la bannière à afficher lors d'une connexion au switch/router:
 banner motd %<Message à afficher>%
@@ -145,3 +145,28 @@ show ip route
 
 # Afficher les informations sur les routes actives et apprisent par RIP:
 show ip rip database
+
+#########################################
+######### CONFIGURATION ROUTAGE #########
+#########################################
+
+# Routage statique IPv4
+ip route <ip_reseau_destination> <netmask> {int | add}
+
+# Route par défaut
+ip route 0.0.0.0 0.0.0.0 {int | add}
+
+# Routage statique IPv6
+ipv6 unicast routing
+ipv6 route 2001:...:: 2001:...:A
+
+#########################################
+#########         DEBUG         #########
+#########################################
+
+# Affiche un résumé des interfaces
+sh ip int br
+
+# Affiche un résumé des routes
+sh ip route
+

