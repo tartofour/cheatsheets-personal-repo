@@ -43,6 +43,9 @@ conf int <interface>
 # Configurer l'IP de l'interface:
 ip address <ip> <netmask>
 
+# Configurer l'IPv6 de l'inferace:
+ipv6 address <ip>/64
+
 # Configurer le clock rate lors d'une connexion entre routeurs via cable série 
 # À exécuter seulement sur l'interface DCE:
 clock rate <clockrate>
@@ -146,6 +149,26 @@ show ip route
 # Afficher les informations sur les routes actives et apprisent par RIP:
 show ip rip database
 
+######################################
+#### CONFIGURATION RIPng (IPV6) ######
+######################################
+
+# Activer le routage IPV6
+ipv6 unicast-routing
+
+# Pour chaque interface non connecté à un LAN
+ipv6 rip <nomDomainRIP> enable
+
+# Activer le routage rip sur chaque routeur 
+ipv6 router rip <nomDomaineRIP>
+
+# Par mesure de sécurité, sur chaque routeur
+redistributed connected
+
+# Propager la route par défaut et les routes statique
+# À executer sur le routeur offrant la route par défaut (souvent internet)
+ipv6 rip <nomDomaineRIP> default-information originate
+
 #########################################
 ######### CONFIGURATION ROUTAGE #########
 #########################################
@@ -155,18 +178,30 @@ ip route <ip_reseau_destination> <netmask> {int | add}
 
 # Route par défaut
 ip route 0.0.0.0 0.0.0.0 {int | add}
+ipv6 route ::/0 {int | add}
 
 # Routage statique IPv6
 ipv6 unicast routing
-ipv6 route 2001:...:: 2001:...:A
+ipv6 route <dest_ipv6_network> {int &| add}
 
 #########################################
 #########         DEBUG         #########
 #########################################
 
 # Affiche un résumé des interfaces
-sh ip int br
+sh ip[v6] int br
 
 # Affiche un résumé des routes
-sh ip route
+sh ip[v6] route [rip | static]
+
+# Affiche le protocole de routage utilisé
+sh ip[v6] protocols
+
+# Affiche la configuration globale actuelle
+sh run
+
+# Débuguer protocol RIPng
+debug ipv6 rip
+
+
 
