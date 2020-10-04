@@ -104,6 +104,22 @@ username <username> privilege 1 secret <mdp>
 # Générer la clé rsa:
 crypto key generate rsa general-keys modulus 1024
 
+#########################################
+########### ROUTAGE STATIQUE ############
+#########################################
+
+# Routage statique IPv4
+ip route <ip_reseau_destination> <netmask> {int | add}
+
+# Route par défaut
+ip route 0.0.0.0 0.0.0.0 {int | add}
+ipv6 route ::/0 {int | add}
+
+# Routage statique IPv6
+ipv6 unicast routing
+ipv6 route <dest_ipv6_network> {int &| add}
+
+
 ######################################
 ######### CONFIGURER RIP V2  #########
 ######################################
@@ -168,21 +184,6 @@ redistributed connected
 # Propager la route par défaut et les routes statique
 # À executer sur le routeur offrant la route par défaut (souvent internet)
 ipv6 rip <nomDomaineRIP> default-information originate
-
-#########################################
-######### CONFIGURATION ROUTAGE #########
-#########################################
-
-# Routage statique IPv4
-ip route <ip_reseau_destination> <netmask> {int | add}
-
-# Route par défaut
-ip route 0.0.0.0 0.0.0.0 {int | add}
-ipv6 route ::/0 {int | add}
-
-# Routage statique IPv6
-ipv6 unicast routing
-ipv6 route <dest_ipv6_network> {int &| add}
 
 #########################################
 #########         DEBUG         #########
