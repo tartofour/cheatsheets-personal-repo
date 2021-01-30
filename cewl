@@ -1,0 +1,2 @@
+# Parcourt une page web et crée un dico lowercase
+ruby -W0 ./cewl.rb -d 0 -w custom-list.txt --lowercase https://example.com

@@ -109,11 +109,11 @@ crypto key generate rsa general-keys modulus 1024
 #########################################
 
 # Routage statique IPv4
-ip route <ip_reseau_destination> <netmask> {int | add}
+ip route <ip_reseau_destination> <netmask> {int | add} <dist_admin>
 
 # Route par défaut
-ip route 0.0.0.0 0.0.0.0 {int | add}
-ipv6 route ::/0 {int | add}
+ip route 0.0.0.0 0.0.0.0 {int | add} <dist_admin>
+ipv6 route ::/0 {int | add} <dist_admin>
 
 # Routage statique IPv6
 ipv6 unicast routing
@@ -183,6 +183,7 @@ redistributed connected
 
 # Propager la route par défaut et les routes statique
 # À executer sur le routeur offrant la route par défaut (souvent internet)
+# sur l'interface vers le réseaux local
 ipv6 rip <nomDomaineRIP> default-information originate
 
 #########################################

@@ -1,0 +1,12 @@
+# Check for vulnerabilities via nmap
+nmap -sV --script=nfs-* <ip>
+
+# Afficher les partages NFS
+showmount <ip>
+
+# Énumerer les partages NFS
+showmount -e <ip>
+
+# Monter un partage NFS
+ mount -t nfs 192.168.1.72:/home/vulnix /tmp/nfs -nolock
+

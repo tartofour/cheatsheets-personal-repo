@@ -1,0 +1,18 @@
+# Check for vulnerabilities via nmap
+nmap --script smb-enum-shares -p 139,445 <ip>
+
+# Énumérer les hostnames Net-BIOS
+nmblookup -A <ip>
+
+# Lister les partages publiques sur un host SMB
+smbmap -H <ip>
+smbclient -L <ip> -U <username> -p 445
+
+# Lister les partages via username/password et via le nom de domaine
+smbmap -H <ip> -d <domain>-u <user> -p <password>
+
+# Establish a SMB session with rpcclient (originally RPC was create to debug SMB Suite)
+rpcclient -U <username> <ip>
+
+# Tenter de se connecter avec une session Null
+rpcclient -U "" -N <ip>

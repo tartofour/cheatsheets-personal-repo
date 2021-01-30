@@ -1,0 +1,12 @@
+# Énumérer les ports SMB (139 et 445)
+enum4linux -a <ip>
+
+# Énumérer les utilisateurs via Kerberos
+# It is NOT recommended to brute force credentials due to account lockout policies
+kerbrute userenum -d <domain.local> --dc <ip_dc> <userlist.txt>
+
+# Request TGTs for all users in list
+# ASReproasting occurs when a user account has the privilege "Does not require Pre-Authentication" set.
+GetNPUsers.py <domain.local/> -usersfile <checked_userlist.txt> -no-pass
+
+

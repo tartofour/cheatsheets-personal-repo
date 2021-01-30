@@ -1,0 +1,147 @@
+
+# Supprimer la configuration de démarrage
+erase startup-config
+
+# Supprimer la table VLAN
+delete flash:vlan.dat
+
+# Redémarrer le switch
+reload
+
+
+#########################################
+###########   PORT SECURITY   ###########
+#########################################
+
+# Configurer plusieurs interfaces simultanément
+interface range Fa0/1-2
+
+# Désactiver les ports non-utilisés
+sh
+
+# Active la sécurité des ports sur les int choisies
+switchport port-security
+
+# Limitier le nombre d'adresses MAC autorisées sur le port
+switchport port-security maximum <nb>
+
+# Configurer le port en mode sticky, static ou dynamique
+switchport port-security mac-address {sticky | static |dynamic}
+
+    - static : Les adresses MAC sont configurées manuellement sur un port. Ces adresses sont stockées dans la table d'adresse et ajoutées à la running-config du switch.
+    - dynamic : Les adresse MAC sont apprises dynamiquement et ajoutées uniquement à la table d'adresse.
+    - sticky : Les adresse MAC sont apprises dynamiquement ou configurées manuellement. Ces adresse sont stockées dans la table d'adresse et ajoutées à la running-config.
+
+# Modifier la politique lors d'une violation
+switchport port-security violation {protect | restrict | shutdown}
+
+    - protect : Quand le nombre limite d'adresse MAC à atteint la limite, les paquets de sources inconnues sont jetées jusqu'à ce qu'un MAC se libère ou que la limite augmente.
+                Pas de notificaiton qu'une violation de sécurité s'est déroulée.
+
+    - restrict : Quand le nombre limite d'adresse MAC à atteint la limite, les paquets de sources inconnues sont jetées jusqu'à ce qu'un MAC se libère ou que la limite augmente.
+                   Il y a notification lorsqu'une violation de sécurité s'est déroulée.
+
+    - shutdown (par défaut) : Une violation entraine l'arrêt immédiat de l'interface.
+                                Celà incrémente le compteur de violation.
+                                Pour sortir l'interface du mode erreur : 'sh' puis 'no sh'
+
+# Affiche les informations de sécurité du port spécifié
+show port-security [int Fa0/2]
+
+    # Resultat 
+        Secure Port MaxSecureAddr CurrentAddr SecurityViolation Security Action
+                   (Count)       (Count)        (Count)
+        --------------------------------------------------------------------
+            Fa0/1        1          1                 0          Protect
+            Fa0/2        1          1                 0          Protect
+        ----------------------------------------------------------------------
+
+# Afficher un résumé de l'état des interfaces
+show ip interface brief
+
+    # Résultat
+        Interface              IP-Address      OK? Method Status                Protocol
+        FastEthernet0/1        unassigned      YES manual up                    up
+        FastEthernet0/2        unassigned      YES manual up                    up
+        FastEthernet0/3        unassigned      YES manual administratively down down
+        FastEthernet0/4        unassigned      YES manual administratively down down
+        FastEthernet0/5        unassigned      YES manual administratively down down
+
+# 
+show port-security address
+
+    # Résultat
+                    Secure Mac Address Table
+        -------------------------------------------------------------------------------
+        Vlan	Mac Address	Type			Ports		Remaining Age
+                                        (mins)
+        ----	-----------	----			-----		-------------
+        1	00E0.B027.2245	SecureSticky		FastEthernet0/1		-
+        1	0001.647C.697E	SecureSticky		FastEthernet0/2		-
+        ------------------------------------------------------------------------------
+#########################################
+################   VLAN   ###############
+#########################################
+
+# Créer un VLAN
+vlan <vlan_nb>
+
+# Attribuer un nom au VLAN
+name student
+
+# Passer une interface en mode permanent (sur TOUTES les int connectées aux machine)
+switchport mode access
+
+# Assigner un interface à un VLAN (à taper dans le menu conf d'une interface)
+switchport access vlan <vlan_nb>
+
+# Passer une interface en mode trunk (sur les TOUTES les int directement connecté à un autre switch)
+switchport mode trunk 
+
+# Autoriser les vlan à passer par le trunk
+switchport trunk allowed vlan, 10,20,30
+
+# Afficher le résumé des VLANs
+show vlan brief
+
+    # Résultat
+        VLAN Name                             Status    Ports
+        ---- -------------------------------- --------- -------------------------------
+        1    default                          active    Fa0/1, Fa0/2, Fa0/3, Fa0/4
+                                                        Fa0/5, Fa0/6, Fa0/7, Fa0/8
+                                                        Fa0/9, Fa0/10, Fa0/11, Fa0/12
+                                                        Fa0/13, Fa0/14, Fa0/15, Fa0/16
+                                                        Fa0/17, Fa0/18, Fa0/19, Fa0/20
+                                                        Fa0/21, Fa0/22, Fa0/23, Fa0/24
+                                                        Gig0/1, Gig0/2
+        1002 fddi-default                     active
+        1003 token-ring-default               active
+        1004 fddinet-default                  active
+        1005 trnet-default                    active   
+
+# Affiche les informations du VLAN 20
+show vlan id 20
+
+
+#########################################
+###########   DHCP SNOOPING   ###########
+#########################################
+
+# Activer le DHCP snooping
+ip dhcp snooping
+
+# Activer le DHCP snooping sur les interfaces VLAN
+ip dhcp snooping vlan <vlan_nb>,<vlan_nb>
+
+# Entrer dans la configuration de l'interface
+int <interface>
+
+# Définir le port comme étant de confiance
+ip dhcp snooping trust
+
+# (optionnel) Sur un port untrusted. 
+# Limit the rate at which an attacker can continually send 
+# bogus DHCP requests through untrusted ports to the DHCP server
+ip dhcp snooping limit rate 5
+
+
